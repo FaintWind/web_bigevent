@@ -60,8 +60,8 @@
         {{each data}}
         <tr>
             <td>{{$value.title}}</td>
-            <td>{{$value.cate_name | dataFormat}}</td>
-            <td>{{$value.pub_date}}</td>
+            <td>{{$value.cate_name}}</td>
+            <td>{{$value.pub_date | dataFormat}}</td>
             <td>{{$value.state}}</td>
             <td>
                 <button type="button" class="layui-btn layui-btn-xs btn-edit" data-id='{{$value.Id}}'>编辑</button>
@@ -70,6 +70,64 @@
           </tr>
         {{/each}}
     </script>
+
+    <script type="text/html" id="edit_dialog">
+      <form class="layui-form"  id="art-form">
+        <input type="hidden" name="Id">
+        <div class="layui-form-item">
+          <label class="layui-form-label">文章标题</label>
+          <div class="layui-input-block">
+            <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">文章类别</label>
+            <div class="layui-input-block">
+              <select name="cate_id" lay-verify="required">
+              </select>
+            </div>
+          </div> 
+          
+          <div class="layui-form-item">
+            <!-- 左侧的 label -->
+            <label class="layui-form-label">文章内容</label>
+            <!-- 为富文本编辑器外部的容器设置高度 -->
+            <div class="layui-input-block" style="height: 400px;">
+              <!-- 重要：将来这个 textarea 会被初始化为富文本编辑器 -->
+              <textarea name="content"></textarea>
+            </div>
+          </div>  
+          
+          <div class="layui-form-item">
+            <!-- 左侧的 label -->
+            <label class="layui-form-label">文章封面</label>
+            <!-- 选择封面区域 -->
+            <div class="layui-input-block cover-box">
+              <!-- 左侧裁剪区域 -->
+              <div class="cover-left">
+                <img id="image" src="/assets/images/sample2.jpg" alt="" />
+              </div>
+              <!-- 右侧预览区域和选择封面区域 -->
+              <div class="cover-right">
+                <!-- 预览的区域 -->
+                <div class="img-preview"></div>
+                <!-- 选择封面按钮 -->
+                <button type="button" class="layui-btn layui-btn-danger" id="btnChooseCover">选择封面</button>
+                <input type="file"  id="coverFile" accept="image/png,image/jpeg,image/gif" style="display: none;">
+              </div>
+            </div>
+          </div>   
+          
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="formDemo">确认修改</button>    
+            </div>
+          </div>                  
+    </form>
+  </script>      
+
+
 
     <script type="text/html" id="tql-cate">
         <option value="">所有分类</option>

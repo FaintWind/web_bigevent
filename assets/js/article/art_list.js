@@ -15,7 +15,7 @@ $(function(){
         var hh = padZero(date.getHours());
         var mm = padZero(date.getMinutes());
         var ss = padZero(date.getSeconds());
-        return y + '-' + m + '-' + d + ' ' + hh + ' : ' + mm + ' : ' + ss
+        return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
 
     }
 
@@ -41,6 +41,59 @@ $(function(){
         initTable()
     })
 
+    $('tbody').on('click','.btn-delete',function(){
+        
+        var length = $('.btn-delete').length
+        var id = $(this).attr('data-id')
+        console.log('123',length,id);
+        layer.confirm('是否确认删除', {icon: 3, title:'提示'}, function(index){
+            $.ajax({
+                url:'/my/article/delete/' + id,
+                method:'GET',
+                success:function(res){
+                    if(res.status !== 0){
+                        return layer.msg('删除文章失败')
+                    }
+                    layer.msg('删除文章成功')
+                    layer.close(index);
+                    if(length === 1){
+                        q.pagenum = q.pagenum === 1 ? 1 : q.pagenum - 1
+                    }
+                    initTable()
+
+                }
+            })
+            
+           
+          });
+    })
+
+
+
+    var editIndex = null
+    $('tbody').on('click','.btn-edit',function(){
+        
+        return; 
+        editIndex = layer.open({
+            type:1,
+            area:['500px','250px'],
+            title:'修改文章类别',
+            content:$('#edit_dialog').html()            
+        })     
+        var id = $(this).attr('data-id');
+        $.ajax({
+            url:"/my/article/cates/" + id,
+            method:"GET",
+            success:function(res){
+                if(res.status !== 0){
+                    return layer.msg('获取文章分类数据失败')
+                }
+                form.val('edit_form',res.data)
+
+            }
+        })        
+        
+    })
 
 
 
@@ -80,7 +133,7 @@ $(function(){
     function pageRender(total){
         laypage.render({
             elem: 'pageBox', //注意，这里的 test1 是 ID，不用加 # 号            
-            count: 50 ,//数据总数，从服务端得到
+            count: total ,//数据总数，从服务端得到
             limit: q.pagesize,
             curr: q.pagenum,
             layout:['count','limit','prev', 'page', 'next','skip'],
